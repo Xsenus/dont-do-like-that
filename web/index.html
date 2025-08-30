@@ -142,6 +142,7 @@
       color: var(--tg-theme-button-text-color, #fff);
       box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
       transition: transform .15s ease, box-shadow .15s ease;
+      cursor: pointer;
     }
 
     .tg-btn:hover {
@@ -186,14 +187,22 @@
     if (tgBtn) {
       tgBtn.addEventListener('click', () => {
         const url = 'https://t.me/Xsenus';
+
+        try { tg?.HapticFeedback?.impactOccurred?.('light'); } catch { }
+
         if (tg && typeof tg.openTelegramLink === 'function') {
           tg.openTelegramLink(url);
         } else {
-          window.open(url, '_blank', 'noopener');
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
         }
       });
     }
-    const greetingEl = document.getElementById('greeting');
 
     function applyTheme() {
       const r = getComputedStyle(document.documentElement);
@@ -206,21 +215,30 @@
       }
     }
 
-    function setGreeting(name) {
-      const base = "Привет";
-      greetingEl.textContent = name ? base + ", " + name + "!" : base + "!";
+    function getDisplayName(user) {
+      const first = user?.first_name?.trim();
+      if (first) return first;
+      const uname = user?.username?.trim();
+      if (uname) return `@${uname}`;
+      return '';
+    }
+
+    const greetingEl = document.getElementById('greeting');
+    function setGreeting(display) {
+      const base = 'Привет';
+      greetingEl.textContent = display ? `${base}, ${display}!` : `${base}!`;
     }
 
     if (tg) {
       tg.ready();
       tg.expand();
       const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
-      const name = user && (user.first_name || user.username || "");
-      setGreeting(name);
+      const display = getDisplayName(user);
+      setGreeting(display);
       applyTheme();
       tg.onEvent('themeChanged', applyTheme);
     } else {
-      setGreeting("");
+      setGreeting('');
     }
   </script>
 </body>
