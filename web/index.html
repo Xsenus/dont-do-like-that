@@ -32,20 +32,22 @@
       place-items: center;
       padding: var(--space);
       text-align: center;
+      background: var(--tg-theme-bg-color, #0b0b0b);
+      color: var(--tg-theme-text-color, #111);
     }
 
     .card {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      padding: clamp(20px, 4vw, 36px);
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
-      background: rgba(255, 255, 255, .6);
-      backdrop-filter: blur(6px);
-      max-width: 720px;
-      width: min(92vw, 720px);
+      gap: 20px;
+      padding: 40px 32px;
+      border-radius: 24px;
+      background: var(--tg-theme-secondary-bg-color, rgba(255, 255, 255, .85));
+      border: 1px solid var(--tg-theme-hint-color, rgba(0, 0, 0, .12));
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+      max-width: 420px;
+      width: 100%;
     }
 
     .greeting {
@@ -55,19 +57,20 @@
     }
 
     .headline {
-      font-size: clamp(28px, 6vw, 46px);
+      font-size: 32px;
       font-weight: 800;
-      line-height: 1.2;
       margin: 0;
     }
 
     .pointer-wrap {
       position: relative;
-      height: 72px;
+      height: 84px;
+      margin-top: 4px;
+      margin-bottom: 4px;
     }
 
     .finger {
-      font-size: 56px;
+      font-size: 64px;
       line-height: 1;
       display: inline-block;
       transform-origin: 50% 80%;
@@ -77,7 +80,7 @@
 
     .no-sign {
       position: absolute;
-      top: -10px;
+      top: -6px;
       right: -10px;
       width: 44px;
       height: 44px;
@@ -113,51 +116,47 @@
       }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .finger {
+        animation: none;
+      }
+    }
+
     .footer {
       font-size: 12px;
       opacity: .9;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-    }
-
-    .footer .email-link {
-      display: inline-flex;
-      align-items: center;
       gap: 10px;
-      padding: 10px 14px;
+    }
+
+    .email-btn {
+      display: inline-block;
+      padding: 12px 20px;
       border-radius: 999px;
-      text-decoration: none;
       font-size: 14px;
-      line-height: 1;
-      border: 1px solid rgba(0, 0, 0, .08);
-      transition: transform .15s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease;
-      /* Адаптация к теме Telegram */
-      color: var(--tg-theme-button-text-color, #111);
-      background: var(--tg-theme-button-color, #f0f0f0);
-      border-color: var(--tg-theme-hint-color, rgba(0, 0, 0, .15));
+      font-weight: 600;
+      text-decoration: none;
+      background: var(--tg-theme-button-color, #3b82f6);
+      color: var(--tg-theme-button-text-color, #fff);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      transition: transform .15s ease, box-shadow .15s ease;
     }
 
-    .footer .email-link:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
+    .email-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
     }
 
-    .footer .email-link:active {
+    .email-btn:active {
       transform: translateY(0);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, .12);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
     }
 
-    .footer .email-link:focus-visible {
+    .email-btn:focus-visible {
       outline: 2px solid var(--tg-theme-link-color, #3b82f6);
       outline-offset: 2px;
-    }
-
-    .footer .email-link svg {
-      width: 18px;
-      height: 18px;
-      display: block;
     }
   </style>
 </head>
@@ -172,19 +171,11 @@
       </div>
       <h1 class="headline">Не надо так делать</h1>
       <div class="footer">
-        <div>Проект: dont-do-like-that</div>
-        <a class="email-link" href="mailto:xsenus92@gmail.com" title="Написать на xsenus92@gmail.com"
-          aria-label="Написать на xsenus92@gmail.com">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 
-      2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 
-      2 0 0 0-2-2Zm0 2v.01L12 13 4 6.01V6h16ZM4 
-      18V8.21l7.4 6.17a1 1 0 0 0 1.2 0L20 8.21V18H4Z" />
-          </svg>
-          <span>xsenus92@gmail.com</span>
+        <div class="project">Проект: dont-do-like-that</div>
+        <a class="email-btn" href="mailto:xsenus92@gmail.com" aria-label="Написать на xsenus92@gmail.com">
+          ✉️ Написать
         </a>
       </div>
-
     </div>
   </div>
 
@@ -194,13 +185,13 @@
 
     function applyTheme() {
       const r = getComputedStyle(document.documentElement);
-      const bg = r.getPropertyValue('--tg-theme-bg-color') || '#ffffff';
       const text = r.getPropertyValue('--tg-theme-text-color') || '#111111';
-      const secondary = r.getPropertyValue('--tg-theme-hint-color') || 'rgba(0,0,0,.6)';
-      document.body.style.background = bg.trim();
-      document.body.style.color = text.trim();
+      const hint = r.getPropertyValue('--tg-theme-hint-color') || 'rgba(0,0,0,.12)';
       const card = document.querySelector('.card');
-      if (card) card.style.borderColor = (secondary || text).trim();
+      if (card) {
+        card.style.color = text.trim();
+        card.style.borderColor = hint.trim();
+      }
     }
 
     function setGreeting(name) {
