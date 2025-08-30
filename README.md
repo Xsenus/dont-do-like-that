@@ -1,6 +1,6 @@
 # dont-do-like-that
 
-Telegram Mini App + бот, который показывает анимированный жест. Веб‑часть — статика, бот — Telegraf.
+Telegram Mini App + бот, который показывает анимированный жест. Веб-часть — статика, бот — Telegraf.
 
 ## Репо структура
 
@@ -8,11 +8,11 @@ Telegram Mini App + бот, который показывает анимиров
 dont-do-like-that/
   web/            # статика Mini App (index.html)
   bot/            # код бота (Telegraf)
-  README.md       # вы здесь
+  README.md
 ```
 
 - **web/** — отдаётся по HTTPS (например, GitHub Pages).
-- **bot/** — запускает Telegram‑бота и выдаёт кнопку `webApp` для открытия Mini App.
+- **bot/** — запускает Telegram-бота и выдаёт кнопку `webApp` для открытия Mini App.
 
 ---
 
@@ -21,9 +21,9 @@ dont-do-like-that/
 1. Залейте `web/index.html` на HTTPS. Для GitHub Pages:
    - Создайте публичный репозиторий `dont-do-like-that`.
    - Включите **Settings → Pages → Deploy from a branch** → `main` + `/ (root)`.
-   - Получите URL: `https://<user>.github.io/dont-do-like-that/` (далее — `WEBAPP_URL`).
+   - Получите URL: `https://<your-username>.github.io/dont-do-like-that/` (далее — `WEBAPP_URL`).
 
-Локально можно просто открыть файл — Telegram‑данных не будет, но интерфейс виден.
+Локально можно просто открыть файл — Telegram-данных не будет, но интерфейс виден.
 
 ---
 
@@ -38,7 +38,7 @@ npm install
 cp .env.example .env
 # откройте .env и задайте:
 # BOT_TOKEN=ваш_токен_бота
-# WEBAPP_URL=https://<user>.github.io/dont-do-like-that/
+# WEBAPP_URL=https://<your-username>.github.io/dont-do-like-that/
 ```
 
 ### Запуск (локально)
@@ -63,15 +63,15 @@ npm run start
    npm i -g pm2
    ```
 
-2. В `bot/`:
+1. В `bot/`:
 
    ```bash
    pm2 start bot.js --name dont-do-like-that-bot
    pm2 save
-   pm2 startup    # автозапуск после перезагрузки
+   pm2 startup
    ```
 
-3. Обновления:
+1. Обновления:
 
    ```bash
    git pull
@@ -79,17 +79,14 @@ npm run start
    pm2 restart dont-do-like-that-bot
    ```
 
-> Можно хранить окружение в `.env` (подхватывается автоматически) или в `pm2 start --env`/ecosystem.config.js.
+> Можно хранить окружение в `.env` (подхватывается автоматически) или в `pm2 start --env`/`ecosystem.config.js`.
 
 ### Вариант B — **systemd** (нативный сервис Linux)
 
 1. Скопируйте код бота в `/opt/dont-do-like-that/bot`.
-2. Создайте `/etc/systemd/system/dont-do-like-that-bot.service` со следующим содержимым:
+1. Создайте `/etc/systemd/system/dont-do-like-that-bot.service` со следующим содержимым:
 
-   ```ini
-
-   ```
-
+```ini
 [Unit]
 Description=Telegram Bot (dont-do-like-that)
 After=network.target
@@ -97,7 +94,7 @@ After=network.target
 [Service]
 WorkingDirectory=/opt/dont-do-like-that/bot
 Environment=BOT_TOKEN=123456:ABC...
-Environment=WEBAPP_URL=https://<user>.github.io/dont-do-like-that/
+Environment=WEBAPP_URL=https://<your-username>.github.io/dont-do-like-that/
 ExecStart=/usr/bin/node bot.js
 Restart=always
 RestartSec=5
@@ -106,17 +103,17 @@ Group=botuser
 
 [Install]
 WantedBy=multi-user.target
+```
 
-````
+1. Примените и запустите:
 
-3. Примените и запустите:
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now dont-do-like-that-bot
-sudo systemctl status dont-do-like-that-bot
-````
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now dont-do-like-that-bot
+   sudo systemctl status dont-do-like-that-bot
+   ```
 
-4. Логи:
+1. Логи:
 
    ```bash
    journalctl -u dont-do-like-that-bot -f
@@ -130,15 +127,10 @@ sudo systemctl status dont-do-like-that-bot
    docker build -t dont-do-like-that-bot ./bot
    ```
 
-2. Запустите контейнер:
+1. Запустите контейнер:
 
    ```bash
-   docker run -d --name dont-do-like-that-bot --restart always \
-
-   -e BOT_TOKEN=123456:ABC... \
-   -e WEBAPP_URL=https://<user>.github.io/dont-do-like-that/ \
-   dont-do-like-that-bot
-
+   docker run -d --name dont-do-like-that-bot --restart always      -e BOT_TOKEN=123456:ABC...      -e WEBAPP_URL=https://<your-username>.github.io/dont-do-like-that/      dont-do-like-that-bot
    ```
 
 ---
@@ -146,9 +138,9 @@ sudo systemctl status dont-do-like-that-bot
 ## Полезные нюансы
 
 - Mini App открывается **только по HTTPS**.
-- Имя пользователя (`initDataUnsafe.user`) приходит **только внутри Telegram‑клиента**.
+- Имя пользователя (`initDataUnsafe.user`) приходит **только внутри Telegram-клиента**.
 - Если Mini App нужно открыть как обычную страницу вне Telegram — всё работает, но без `initDataUnsafe`.
-- Для продакшн‑логики добавьте обмен данными WebApp → бот через `web_app_data` или ваш API.
+- Для продакшн-логики добавьте обмен данными WebApp → бот через `web_app_data` или ваш API.
 
 ---
 
