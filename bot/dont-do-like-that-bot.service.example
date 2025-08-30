@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram Bot (dont-do-like-that)
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/dont-do-like-that/bot
+Environment=BOT_TOKEN=123456:ABC...
+Environment=WEBAPP_URL=https://<user>.github.io/dont-do-like-that/
+ExecStart=/usr/bin/node bot.js
+Restart=always
+RestartSec=5
+User=botuser
+Group=botuser
+
+[Install]
+WantedBy=multi-user.target

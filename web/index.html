@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>dont-do-like-that — TG Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --space: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body,
+    #app {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: var(--space);
+      text-align: center;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: clamp(20px, 4vw, 36px);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+      background: rgba(255, 255, 255, .6);
+      backdrop-filter: blur(6px);
+      max-width: 720px;
+      width: min(92vw, 720px);
+    }
+
+    .greeting {
+      font-size: clamp(18px, 2.6vw, 22px);
+      opacity: .85;
+      margin: 0;
+    }
+
+    .headline {
+      font-size: clamp(28px, 6vw, 46px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .pointer-wrap {
+      position: relative;
+      height: 72px;
+    }
+
+    .finger {
+      font-size: 56px;
+      line-height: 1;
+      display: inline-block;
+      transform-origin: 50% 80%;
+      animation: wag 1.4s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .2));
+    }
+
+    .no-sign {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 4px solid currentColor;
+      opacity: .9;
+    }
+
+    .no-sign::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 4px;
+      height: 100%;
+      transform: rotate(45deg);
+      background: currentColor;
+    }
+
+    @keyframes wag {
+
+      0%,
+      100% {
+        transform: rotate(0deg) translateY(0);
+      }
+
+      35% {
+        transform: rotate(-12deg) translateY(-2px);
+      }
+
+      70% {
+        transform: rotate(10deg) translateY(0);
+      }
+    }
+
+    .footer {
+      font-size: 12px;
+      opacity: .6;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="wrap">
+    <div class="card">
+      <div class="greeting" id="greeting">Привет!</div>
+      <div class="pointer-wrap" aria-hidden="true">
+        <span class="finger">☝️</span>
+        <span class="no-sign"></span>
+      </div>
+      <h1 class="headline">Не надо так делать</h1>
+      <div class="footer">
+        <div>Проект: dont-do-like-that</div>
+        <a href="mailto:xsenus92@gmail.com">xsenus92@gmail.com</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram && window.Telegram.WebApp;
+    const greetingEl = document.getElementById('greeting');
+
+    function applyTheme() {
+      const r = getComputedStyle(document.documentElement);
+      const bg = r.getPropertyValue('--tg-theme-bg-color') || '#ffffff';
+      const text = r.getPropertyValue('--tg-theme-text-color') || '#111111';
+      const secondary = r.getPropertyValue('--tg-theme-hint-color') || 'rgba(0,0,0,.6)';
+      document.body.style.background = bg.trim();
+      document.body.style.color = text.trim();
+      const card = document.querySelector('.card');
+      if (card) card.style.borderColor = (secondary || text).trim();
+    }
+
+    function setGreeting(name) {
+      const base = "Привет";
+      greetingEl.textContent = name ? base + ", " + name + "!" : base + "!";
+    }
+
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+      const name = user && (user.first_name || user.username || "");
+      setGreeting(name);
+      applyTheme();
+      tg.onEvent('themeChanged', applyTheme);
+    } else {
+      setGreeting("");
+    }
+  </script>
+</body>
+
+</html>
