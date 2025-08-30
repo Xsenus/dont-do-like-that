@@ -131,7 +131,7 @@
       gap: 10px;
     }
 
-    .email-btn {
+    .tg-btn {
       display: inline-block;
       padding: 12px 20px;
       border-radius: 999px;
@@ -144,17 +144,17 @@
       transition: transform .15s ease, box-shadow .15s ease;
     }
 
-    .email-btn:hover {
+    .tg-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
     }
 
-    .email-btn:active {
+    .tg-btn:active {
       transform: translateY(0);
       box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
     }
 
-    .email-btn:focus-visible {
+    .tg-btn:focus-visible {
       outline: 2px solid var(--tg-theme-link-color, #3b82f6);
       outline-offset: 2px;
     }
@@ -172,15 +172,27 @@
       <h1 class="headline">Не надо так делать</h1>
       <div class="footer">
         <div class="project">Проект: dont-do-like-that</div>
-        <a class="email-btn" href="mailto:xsenus92@gmail.com" aria-label="Написать на xsenus92@gmail.com">
-          ✉️ Написать
-        </a>
+        <button class="tg-btn" id="tgBtn" type="button" aria-label="Написать в Telegram @Xsenus">
+          💬 Написать в Telegram
+        </button>
       </div>
     </div>
   </div>
 
   <script>
     const tg = window.Telegram && window.Telegram.WebApp;
+
+    const tgBtn = document.getElementById('tgBtn');
+    if (tgBtn) {
+      tgBtn.addEventListener('click', () => {
+        const url = 'https://t.me/Xsenus';
+        if (tg && typeof tg.openTelegramLink === 'function') {
+          tg.openTelegramLink(url);
+        } else {
+          window.open(url, '_blank', 'noopener');
+        }
+      });
+    }
     const greetingEl = document.getElementById('greeting');
 
     function applyTheme() {
